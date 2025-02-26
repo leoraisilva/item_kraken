@@ -16,17 +16,21 @@ public class ItemModel {
     private int quantidadeIten;
     @Column (nullable = false, name = "valor_item")
     private double valorItem;
+    @Column (nullable = false, name = "status_item")
+    private String statusItem;
     @Column (nullable = false, name = "produto")
     private UUID produto;
     @Column (nullable = false, name = "valor_total")
     private double valorTotal;
 
-    public ItemModel(int quantidadeIten, double valorItem, UUID produto, double valorTotal) {
+    public ItemModel(int quantidadeIten, double valorItem, String statusItem, UUID produto, double valorTotal) {
         this.quantidadeIten = quantidadeIten;
         this.valorItem = valorItem;
+        this.statusItem = statusItem;
         this.produto = produto;
         this.valorTotal = valorTotal;
     }
+
     public ItemModel () {}
 
     public double getValorTotal() {
@@ -65,4 +69,11 @@ public class ItemModel {
         return idItem;
     }
 
+    public String getStatusItem() {
+        return statusItem;
+    }
+
+    public void setStatusItem(String statusItem) {
+        this.statusItem = statusItem;
+    }
 }

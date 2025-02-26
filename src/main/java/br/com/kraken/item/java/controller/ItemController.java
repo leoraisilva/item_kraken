@@ -59,10 +59,11 @@ public class ItemController {
         if(!itemModelOptional.isPresent())
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Not Found Item");
         itemModelOptional.get().setQuantidadeIten(itemModelDTO.quantidadeIten());
+        itemModelOptional.get().setStatusItem(itemModelDTO.statusItem());
         itemModelOptional.get().setValorTotal(itemModelDTO.valorItem() * itemModelDTO.quantidadeIten());
         itemModelOptional.get().setValorItem(itemModelDTO.valorItem());
         itemModelOptional.get().setProduto(itemModelDTO.produto());
         return ResponseEntity.status(HttpStatus.OK).body(itemService.getItemRepository().save(itemModelOptional.get()));
     }
-
+    
 }
