@@ -1,0 +1,6 @@
+br\com\kraken\item\java\controller\ItemController.class
+br\com\kraken\item\ItemApplication.class
+br\com\kraken\item\java\repository\ItemRepository.class
+br\com\kraken\item\java\service\ItemService.class
+br\com\kraken\item\java\modelDTO\ItemModelDTO.class
+br\com\kraken\item\java\model\ItemModel.class
