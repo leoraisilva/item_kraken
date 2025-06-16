@@ -1,14 +1,20 @@
 package br.com.kraken.item.java.controller;
 
+import br.com.kraken.item.java.model.AcessoModel;
+import br.com.kraken.item.java.modelDTO.AcessoDTO;
 import br.com.kraken.item.java.modelDTO.ItemModelDTO;
 import br.com.kraken.item.java.model.ItemModel;
+import br.com.kraken.item.java.service.AcessoService;
 import br.com.kraken.item.java.service.ItemService;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -17,12 +23,23 @@ import java.util.UUID;
 @RequestMapping ("/itens")
 public class ItemController {
     private final ItemService itemService;
+    private final AcessoService acessoService;
 
-    public ItemController (ItemService itemService) {
+    public ItemController (ItemService itemService, AcessoService acessoService) {
         this.itemService = itemService;
+        this.acessoService = acessoService;
+    }
+
+    @PostMapping("/auth/registry")
+    public ResponseEntity<Object> itemCliente(@RequestBody @Valid AcessoDTO acessoDTO) {
+        AcessoModel acessoModel = new AcessoModel();
+        BeanUtils.copyProperties(acessoDTO, acessoModel);
+        acessoModel.setDataCadastro(LocalDateTime.now(ZoneId.of("America/Sao_Paulo")));
+        return ResponseEntity.status(HttpStatus.CREATED).body(acessoService.getRepository().save(acessoModel));
     }
 
     @PostMapping()
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Object> cadastrarItem (@RequestBody @Valid ItemModelDTO itemModelDTO) {
         ItemModel itemModel = new ItemModel();
         BeanUtils.copyProperties(itemModelDTO, itemModel);
@@ -31,11 +48,13 @@ public class ItemController {
     }
 
     @GetMapping()
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Object> listarItens (){
         return ResponseEntity.status(HttpStatus.OK).body(itemService.getItemRepository().findAll());
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Object> encontrarItem (@PathVariable (value = "id") UUID id) {
         Optional<ItemModel> itemModelOptional = itemService.getItemRepository().findById(id);
         return itemModelOptional.<ResponseEntity<Object>>map(
@@ -45,6 +64,7 @@ public class ItemController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Object> deletarItem (@PathVariable (value = "id") UUID id) {
         Optional<ItemModel> itemModelOptional = itemService.getItemRepository().findById(id);
         if(!itemModelOptional.isPresent())
@@ -54,6 +74,7 @@ public class ItemController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Object> alterarItem (@PathVariable (value = "id") UUID id, @RequestBody @Valid ItemModelDTO itemModelDTO) {
         Optional<ItemModel> itemModelOptional = itemService.getItemRepository().findById(id);
         if(!itemModelOptional.isPresent())
