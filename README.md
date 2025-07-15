@@ -1,5 +1,5 @@
 # item_kraken
-A API do Sistema Kraken responsável pelo gerenciamento do Pedido
+A API do Sistema Kraken responsável pelo gerenciamento do Item
 
 ## Serviço tem como a função:
 Cria, alterar, buscar e deletar os itens cadastrado no banco de dado.
